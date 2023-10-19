@@ -1,0 +1,21 @@
+from qiskit import QuantumCircuit, Aer, execute
+def find_negative_numbers(list_number):
+    n = len(list_number)  # Get the number of elements in the list
+    
+    # Create a quantum circuit with n quantum bits and n classical bits
+    circuit = QuantumCircuit(n, n)
+    
+    # Initialize the quantum bits with the values from the list
+    for i, number in enumerate(list_number):
+        if number < 0:
+            circuit.x(i)  # Apply an X gate to set the qubit to |1> if number is negative
+    
+    # Measure the quantum bits and store the results in the classical bits
+    circuit.measure(list(range(n)), list(range(n)))
+    # Simulate the quantum circuit on the local Aer simulator
+    simulator = Aer.get_backend('qasm_simulator')
+    result = execute(circuit, simulator, shots=1).result()
+    counts = result.get_counts(circuit)
+    
+    key = list(counts.keys())
+    return '1' in key[0]
